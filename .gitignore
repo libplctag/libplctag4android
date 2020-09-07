@@ -87,4 +87,3 @@ lint/tmp/
 gradle/*
 gradlew
 gradlew.bat
-jna
