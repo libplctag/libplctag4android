@@ -48,7 +48,7 @@ android {
 
     task checkoutLibplctagSource {
         delete "$rootDir/app/src/main/cpp/libplctag"
-        grgit.clone(dir: "$rootDir/app/src/main/cpp/libplctag", uri: "https://github.com/libplctag/libplctag", refToCheckout: "android_mods")
+        grgit.clone(dir: "$rootDir/app/src/main/cpp/libplctag", uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
     }
 
     task deleteASAN(type: Delete) {
