@@ -1,13 +1,15 @@
 # libplctag4android
+
 An experimental repo with an example Android application using libplctag.
 
-This is a direct copy of the great work done by @GitHubDragonFly.
+This is a direct copy of the great work done by @GitHubDragonFly with some minor tweaks to use the core C library and the 
+libplctag4j Tag.java wrapper unchanged.
 
-Goals:
-- [ ] Get the working version into Git.
-- [ ] Make the Gradle build check out the release branch of libplctag from the main C repo when building.
-- [ ] Get the Android changes back into the main C repo.
+TODO:
+- [x] Get the working version into Git.
+- [x] Make the Gradle build check out the release branch of libplctag from the main C repo when building.
+- [x] Get the Android changes back into the main C repo.
 - [ ] Make the Gradle build load the NDK.
 - [ ] Make the build process work on GitHub Actions.
-- [ ] Use the libplctag4j Java version or figure out another way to share the Java code part.
+- [x] Use the libplctag4j Java version or figure out another way to share the Java code part.
 - [ ] Documentation!
