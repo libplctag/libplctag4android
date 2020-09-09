@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AB &amp; Modbus Master</string>
+    <string name="btnExit">Exit</string>
+    <string name="btnStartAB">Start AB</string>
+    <string name="btnStartMB">Start MB</string>
+    <string name="btnStopAB">Stop AB</string>
+    <string name="btnStopMB">Stop MB</string>
+</resources>
