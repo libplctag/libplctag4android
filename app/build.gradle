@@ -31,7 +31,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            path "src/main/cpp/libplctag/CMakeLists.txt"
+            path "$buildDir/src/cpp/libplctag/CMakeLists.txt"
             version "3.10.2"
         }
     }
@@ -47,8 +47,18 @@ android {
     }
 
     task checkoutLibplctagSource {
-        delete "$rootDir/app/src/main/cpp/libplctag"
-        grgit.clone(dir: "$rootDir/app/src/main/cpp/libplctag", uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
+//        grgit.clone(dir: "$rootDir/app/src/main/cpp/libplctag", uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
+        def libplctagFolderPath = "$buildDir/src/cpp/libplctag"
+        def libplctagFolder = new File(libplctagFolderPath)
+
+        // if it does not exist, then clone the repo.
+        if( !libplctagFolder.exists() ) {
+            grgit.clone(dir: libplctagFolderPath, uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
+        } else {
+            // if it does exist, do a pull.
+            def grgitInstance = grgit.open(dir: libplctagFolderPath)
+            grgitInstance.pull()
+        }
     }
 
     task deleteASAN(type: Delete) {
