@@ -37,11 +37,11 @@ android {
     }
 
     tasks.whenTaskAdded { task ->
-        if (task.name == 'generateSanitize_debugBuildConfig') {
-            task.dependsOn createWrapScriptAddDir
-        }
+//        if (task.name == 'generateSanitize_debugBuildConfig') {
+//            task.dependsOn createWrapScriptAddDir
+//        }
 
-        if(task.name == "externalNativeBuild") {
+        if (task.name == "externalNativeBuild") {
             task.dependsOn checkoutLibplctagSource
         }
     }
@@ -52,7 +52,7 @@ android {
         def libplctagFolder = new File(libplctagFolderPath)
 
         // if it does not exist, then clone the repo.
-        if( !libplctagFolder.exists() ) {
+        if (!libplctagFolder.exists()) {
             libplctagFolder.mkdirs()
             grgit.clone(dir: libplctagFolderPath, uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
         } else {
@@ -62,76 +62,77 @@ android {
         }
     }
 
-    task deleteASAN(type: Delete) {
-        delete 'jni/sanitizer/'
-    }
+//    task deleteASAN(type: Delete) {
+//        delete 'jni/sanitizer/'
+//    }
 
-    task copyASANLibs {
-        def libDirs = android.ndkDirectory.absolutePath + "/toolchains/llvm/prebuilt/windows-x86_64/lib64/clang/9.0.8/lib/linux"
-        def inclBuilds = ["arm64-v8a", "x86_64", "armeabi-v7a", "x86"] as String[]
-
-        for (int i = 0; i < inclBuilds.length; i++) {
-            def abi = inclBuilds[i]
-            def destDir = new File("$rootDir/app/src/main/jniLibs/" + abi)
-            destDir.mkdirs()
-
-            def renamedAbi = abi
-            if(abi == "armeabi-v7a" || abi == "armeabi")
-                renamedAbi = "arm"
-            if(abi == "arm64-v8a")
-                renamedAbi = "aarch64"
-            if (abi == "x86")
-                renamedAbi = "i686"
-
-            FileTree tree = fileTree(dir: libDirs).include("libclang_rt.asan-*${renamedAbi}*.so")
-            tree.each { File file ->
-                copy {
-                    from file
-                    into destDir.absolutePath
-                }
-            }
-        }
-    }
-
-    task createWrapScriptAddDir(dependsOn: copyASANLibs) {
-        def inclBuilds = ["arm64-v8a", "x86_64", "armeabi-v7a", "x86"] as String[]
-
-        for (int i = 0; i < inclBuilds.length; i++) {
-            def abi = inclBuilds[i]
-            def dir = new File("$rootDir/app/src/main/res/lib/" + abi)
-            dir.mkdirs()
-            def wrapFile = new File(dir, "wrap.sh")
-            wrapFile.setExecutable(true, false)
-            writeWrapScriptToFullyCompileJavaApp(wrapFile, abi)
-        }
-    }
-}
-
-static def writeWrapScriptToFullyCompileJavaApp(wrapFile, abi) {
-    if(abi == "armeabi" || abi == "armeabi-v7a")
-        abi = "arm"
-    if(abi == "arm64-v8a")
-        abi = "aarch64"
-    if (abi == "x86")
-        abi = "i686"
-    wrapFile.withWriter { writer ->
-        writer.write('#!/system/bin/sh\n')
-        writer.write('HERE="$(cd "$(dirname "$0")" && pwd)"\n')
-        writer.write('export ASAN_OPTIONS=log_to_syslog=false,allow_user_segv_handler=1\n')
-        writer.write('ASAN_LIB=$(ls $HERE/libclang_rt.asan-*-android.so)\n')
-        writer.write('if [ -f \"$HERE/libc++_shared.so\" ]; then\n')
-        writer.write('    # Workaround for https://github.com/android-ndk/ndk/issues/988.\n')
-        writer.write('    export LD_PRELOAD="$ASAN_LIB $HERE/libc++_shared.so"\n')
-        writer.write('else\n')
-        writer.write('    export LD_PRELOAD="$ASAN_LIB"\n')
-        writer.write('fi\n')
-        writer.write('\$@\n')
-    }
+//    task copyASANLibs {
+//        def libDirs = android.ndkDirectory.absolutePath + "/toolchains/llvm/prebuilt/windows-x86_64/lib64/clang/9.0.8/lib/linux"
+//        def inclBuilds = ["arm64-v8a", "x86_64", "armeabi-v7a", "x86"] as String[]
+//
+//        for (int i = 0; i < inclBuilds.length; i++) {
+//            def abi = inclBuilds[i]
+//            def destDir = new File("$rootDir/app/src/main/jniLibs/" + abi)
+//            destDir.mkdirs()
+//
+//            def renamedAbi = abi
+//            if(abi == "armeabi-v7a" || abi == "armeabi")
+//                renamedAbi = "arm"
+//            if(abi == "arm64-v8a")
+//                renamedAbi = "aarch64"
+//            if (abi == "x86")
+//                renamedAbi = "i686"
+//
+//            FileTree tree = fileTree(dir: libDirs).include("libclang_rt.asan-*${renamedAbi}*.so")
+//            tree.each { File file ->
+//                copy {
+//                    from file
+//                    into destDir.absolutePath
+//                }
+//            }
+//        }
+//    }
+//
+//    task createWrapScriptAddDir(dependsOn: copyASANLibs) {
+//        def inclBuilds = ["arm64-v8a", "x86_64", "armeabi-v7a", "x86"] as String[]
+//
+//        for (int i = 0; i < inclBuilds.length; i++) {
+//            def abi = inclBuilds[i]
+//            def dir = new File("$rootDir/app/src/main/res/lib/" + abi)
+//            dir.mkdirs()
+//            def wrapFile = new File(dir, "wrap.sh")
+//            wrapFile.setExecutable(true, false)
+//            writeWrapScriptToFullyCompileJavaApp(wrapFile, abi)
+//        }
+//    }
+//}
+//
+//static def writeWrapScriptToFullyCompileJavaApp(wrapFile, abi) {
+//    if(abi == "armeabi" || abi == "armeabi-v7a")
+//        abi = "arm"
+//    if(abi == "arm64-v8a")
+//        abi = "aarch64"
+//    if (abi == "x86")
+//        abi = "i686"
+//    wrapFile.withWriter { writer ->
+//        writer.write('#!/system/bin/sh\n')
+//        writer.write('HERE="$(cd "$(dirname "$0")" && pwd)"\n')
+//        writer.write('export ASAN_OPTIONS=log_to_syslog=false,allow_user_segv_handler=1\n')
+//        writer.write('ASAN_LIB=$(ls $HERE/libclang_rt.asan-*-android.so)\n')
+//        writer.write('if [ -f \"$HERE/libc++_shared.so\" ]; then\n')
+//        writer.write('    # Workaround for https://github.com/android-ndk/ndk/issues/988.\n')
+//        writer.write('    export LD_PRELOAD="$ASAN_LIB $HERE/libc++_shared.so"\n')
+//        writer.write('else\n')
+//        writer.write('    export LD_PRELOAD="$ASAN_LIB"\n')
+//        writer.write('fi\n')
+//        writer.write('\$@\n')
+//    }
 }
 
 dependencies {
-    //implementation 'org.ajoberstar.grgit:grgit:4.0.2'
-    implementation project(':jna')
+    implementation 'net.java.dev.jna:jna:5.6.0@aar'
+
+    //implementation project(':jna')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
