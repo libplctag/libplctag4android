@@ -53,6 +53,7 @@ android {
 
         // if it does not exist, then clone the repo.
         if( !libplctagFolder.exists() ) {
+            libplctagFolder.mkdirs()
             grgit.clone(dir: libplctagFolderPath, uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
         } else {
             // if it does exist, do a pull.
