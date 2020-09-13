@@ -87,3 +87,8 @@ lint/tmp/
 gradle/*
 gradlew
 gradlew.bat
+.project
+
+.settings
+.classpath
+
