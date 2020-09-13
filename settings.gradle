@@ -1,3 +1,2 @@
-include ':jna'
 include ':app'
 rootProject.name = "AB & Modbus Master"
