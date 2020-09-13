@@ -92,3 +92,7 @@ gradlew.bat
 .settings
 .classpath
 
+# app stuff
+app/.settings
+app/.cxx
+
