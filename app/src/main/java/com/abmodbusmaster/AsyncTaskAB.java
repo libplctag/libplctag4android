@@ -15,7 +15,7 @@ public class AsyncTaskAB  extends AsyncTask<Void, Void, String> {
     int timeout = 10000;
     private Tag ABMaster = null;
 
-    ABTaskCallbackInterface.ABTaskCallback ABtaskCallback = MainActivity.ABtaskCallback;
+    com.abmodbusmaster.ABTaskCallbackInterface.ABTaskCallback ABtaskCallback = MainActivity.ABtaskCallback;
 
     public AsyncTaskAB() {
         Log.v(TAG,"New AB Task Created");
