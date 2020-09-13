@@ -34,7 +34,8 @@ You will need an Internet connection.
 9. In the pop-up window, select "SDK Location" in the left side of the window.
 10. In the right side of the Window, modify the Android NDK Location to point to where you installed the NDK.
 
-Once all this is done, you should be able to build the APK for the project.
+Once all this is done, you should be able to build the APK for the project.   **Note** that you will likely see a warning 
+about not finding or being able to resolve JNA.   That's OK and it will resolve when you try to build the first time.
 
 ## Contact and Support
 
