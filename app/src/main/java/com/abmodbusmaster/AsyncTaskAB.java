@@ -4,18 +4,16 @@ import android.util.Log;
 import android.os.AsyncTask;
 import org.libplctag.Tag;
 
-import com.sun.jna.Callback;
-
 public class AsyncTaskAB  extends AsyncTask<Void, Void, String> {
 
     private static final String TAG = "AB Task Activity";
 
-    private static String tagABString = "protocol=ab_eip&gateway=10.206.1.40&path=1,4&plc=ControlLogix&elem_size=4&elem_count=3&name=TestDINTArray";
+    private static String tagABString = "protocol=ab_eip&gateway=192.168.1.10&plc=micrologix&elem_size=2&elem_count=3&name=N7:0";
     public String val1 = "", val2 = "", val3 = "", tempVal1 = "", tempVal2 = "", tempVal3 = "";
     int timeout = 10000;
     private Tag ABMaster = null;
 
-    com.abmodbusmaster.ABTaskCallbackInterface.ABTaskCallback ABtaskCallback = MainActivity.ABtaskCallback;
+    com.abmodbusmaster.ABTaskCallbackInterface ABtaskCallback = MainActivity.ABtaskCallback;
 
     public AsyncTaskAB() {
         Log.v(TAG,"New AB Task Created");
@@ -36,17 +34,28 @@ public class AsyncTaskAB  extends AsyncTask<Void, Void, String> {
         }
 
         while (!isCancelled()){
-            ABMaster.read(timeout);
+            if (ABMaster.getStatus() == Tag.PLCTAG_STATUS_OK) {
+                ABMaster.read(timeout);
 
-            if ((ABMaster.getStatus() == Tag.PLCTAG_STATUS_OK)
-             || (ABMaster.getStatus() == Tag.PLCTAG_STATUS_PENDING)) {
                 tempVal1 = String.valueOf(ABMaster.getInt32(0));
                 tempVal2 = String.valueOf(ABMaster.getInt32(4));
                 tempVal3 = String.valueOf(ABMaster.getInt32(8));
             } else {
-                tempVal1 = "Failed";
-                tempVal2 = "Failed";
-                tempVal3 = "Failed";
+                tempVal1 = "err " + ABMaster.getStatus();
+                tempVal2 = "err " + ABMaster.getStatus();
+                tempVal3 = "err " + ABMaster.getStatus();
+
+                ABMaster.close();
+
+                ABMaster = new Tag(tagABString, timeout);
+
+                while (ABMaster.getStatus() == Tag.PLCTAG_STATUS_PENDING){
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             // If either value has changed then update them all and publish progress on UI thread

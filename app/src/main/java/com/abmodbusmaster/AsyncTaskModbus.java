@@ -13,7 +13,7 @@ public class AsyncTaskModbus  extends AsyncTask<Void, Void, String> {
     int timeout = 10000;
     private Tag MBMaster = null;
 
-    MBTaskCallbackInterface.MBTaskCallback MBtaskCallback = MainActivity.MBtaskCallback;
+    MBTaskCallbackInterface MBtaskCallback = MainActivity.MBtaskCallback;
 
     public AsyncTaskModbus() {
         Log.v(TAG,"New Modbus Task Created");
@@ -34,17 +34,28 @@ public class AsyncTaskModbus  extends AsyncTask<Void, Void, String> {
         }
 
         while (!isCancelled()){
-            MBMaster.read(timeout);
+            if (MBMaster.getStatus() == Tag.PLCTAG_STATUS_OK) {
+                MBMaster.read(timeout);
 
-            if ((MBMaster.getStatus() == Tag.PLCTAG_STATUS_OK)
-                    || (MBMaster.getStatus() == Tag.PLCTAG_STATUS_PENDING)) {
                 tempVal1 = String.valueOf(MBMaster.getInt16(0));
                 tempVal2 = String.valueOf(MBMaster.getInt16(2));
                 tempVal3 = String.valueOf(MBMaster.getInt16(4));
             } else {
-                tempVal1 = "Failed";
-                tempVal2 = "Failed";
-                tempVal3 = "Failed";
+                tempVal1 = "err " + MBMaster.getStatus();
+                tempVal2 = "err " + MBMaster.getStatus();
+                tempVal3 = "err " + MBMaster.getStatus();
+
+                MBMaster.close();
+
+                MBMaster = new Tag(tagModbusString, timeout);
+
+                while (MBMaster.getStatus() == Tag.PLCTAG_STATUS_PENDING){
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             // If either value has changed then update them all and publish progress on UI thread
