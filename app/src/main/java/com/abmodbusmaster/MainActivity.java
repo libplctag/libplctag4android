@@ -1,8 +1,7 @@
 package com.abmodbusmaster;
 
-import androidx.annotation.DrawableRes;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.core.content.ContextCompat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
-public class MainActivity extends AppCompatActivity implements ABTaskCallbackInterface.ABTaskCallback,MBTaskCallbackInterface.MBTaskCallback {
-    public static ABTaskCallbackInterface.ABTaskCallback ABtaskCallback;
-    public static MBTaskCallbackInterface.MBTaskCallback MBtaskCallback;
+public class MainActivity extends AppCompatActivity implements ABTaskCallbackInterface,MBTaskCallbackInterface {
+    public static ABTaskCallbackInterface ABtaskCallback;
+    public static MBTaskCallbackInterface MBtaskCallback;
 
     private static final String TAG = "Main Activity";
 
@@ -25,27 +23,22 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
     TextView tv1, tv2, tv3, tv4, tv5, tv6;
     Button btnStartAB, btnStopAB, btnStartMB, btnStopMB;
 
-//    static {
-//        Native.register(Tag.class, "plctag");
-//        Log.v(TAG, "Library plctag registered!");
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv1 = (TextView)findViewById(R.id.textView1);
-        tv2 = (TextView)findViewById(R.id.textView2);
-        tv3 = (TextView)findViewById(R.id.textView3);
-        tv4 = (TextView)findViewById(R.id.textView4);
-        tv5 = (TextView)findViewById(R.id.textView5);
-        tv6 = (TextView)findViewById(R.id.textView6);
+        tv1 = findViewById(R.id.textView1);
+        tv2 = findViewById(R.id.textView2);
+        tv3 = findViewById(R.id.textView3);
+        tv4 = findViewById(R.id.textView4);
+        tv5 = findViewById(R.id.textView5);
+        tv6 = findViewById(R.id.textView6);
 
-        btnStartAB = (Button)findViewById(R.id.btnStartAB);
-        btnStopAB = (Button)findViewById(R.id.btnStopAB);
-        btnStartMB = (Button)findViewById(R.id.btnStartMB);
-        btnStopMB = (Button)findViewById(R.id.btnStopMB);
+        btnStartAB = findViewById(R.id.btnStartAB);
+        btnStopAB = findViewById(R.id.btnStopAB);
+        btnStartMB = findViewById(R.id.btnStartMB);
+        btnStopMB = findViewById(R.id.btnStopMB);
 
         btnStopAB.setEnabled(false);
         btnStopMB.setEnabled(false);
@@ -53,10 +46,13 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
         ABtaskCallback = this;
         MBtaskCallback = this;
 
-        EditText et0 = (EditText)findViewById(R.id.txtOSArch);
-        et0.setText("OS Arch : " + System.getProperty("os.arch"));
-        EditText et1 = (EditText)findViewById(R.id.txtPlatformArch);
-        et1.setText("Platform Arch : " + Platform.ARCH.toString());
+        String osArch = "OS Arch : " + System.getProperty("os.arch");
+        String platformArch = "Platform Arch : " + Platform.ARCH;
+
+        EditText et0 = findViewById(R.id.txtOSArch);
+        et0.setText(osArch);
+        EditText et1 = findViewById(R.id.txtPlatformArch);
+        et1.setText(platformArch);
     }
 
     @Override
@@ -84,9 +80,9 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
         myTaskAB.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         btnStartAB.setEnabled(false);
-        btnStartAB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_off));
+        btnStartAB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_off));
         btnStopAB.setEnabled(true);
-        btnStopAB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_on));
+        btnStopAB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_on));
 
         Log.v(TAG, "AB Task is " + myTaskAB.getStatus().toString());
     }
@@ -102,9 +98,9 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
         tv3.setText("0");
 
         btnStartAB.setEnabled(true);
-        btnStartAB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_on));
+        btnStartAB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_on));
         btnStopAB.setEnabled(false);
-        btnStopAB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_off));
+        btnStopAB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_off));
 
         Log.v(TAG, "AB Task is Cancelled");
     }
@@ -119,9 +115,9 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
         myTaskMB.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         btnStartMB.setEnabled(false);
-        btnStartMB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_off));
+        btnStartMB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_off));
         btnStopMB.setEnabled(true);
-        btnStopMB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_on));
+        btnStopMB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_on));
 
         Log.v(TAG, "Modbus Task is " + myTaskMB.getStatus().toString());
     }
@@ -137,9 +133,9 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
         tv6.setText("0");
 
         btnStartMB.setEnabled(true);
-        btnStartMB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_on));
+        btnStartMB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_on));
         btnStopMB.setEnabled(false);
-        btnStopMB.setBackground(getResources().getDrawable(android.R.drawable.button_onoff_indicator_off));
+        btnStopMB.setBackground(ContextCompat.getDrawable(this, android.R.drawable.button_onoff_indicator_off));
 
         Log.v(TAG, "Modbus Task is Cancelled");
     }
