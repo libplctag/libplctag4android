@@ -36,7 +36,7 @@ package org.libplctag;
 
 import java.io.File;
 import java.io.IOException;
-//import java.util.StringTokenizer;
+import java.math.BigInteger;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
@@ -454,6 +454,34 @@ public class Tag {
 
 
     /**
+     * getUInt64
+     *
+     * Return an unsigned 64-bit value from the given offset in the tag buffer.
+     *
+     * @param offset the byte offset at which to start getting the value.
+     * @return UINT64_MAX if there is an error otherwise the value.
+     */
+
+    public BigInteger getUInt64(int offset) {
+        long tmp_res = Tag.plc_tag_get_uint64(this.tag_id, offset);
+
+        BigInteger value = new BigInteger(String.valueOf(tmp_res));
+        BigInteger max = new BigInteger("18446744073709551616");
+
+        if(tmp_res < 0) {
+            value = max.add(value);
+        }
+
+        return value;
+    }
+
+    private static native long plc_tag_get_uint64(int tag_id, int offset);
+
+    public int setUInt64(int offset, BigInteger val) { return Tag.plc_tag_set_uint64(this.tag_id, offset, val.longValue()); }
+
+    private static native int plc_tag_set_uint64(int tag_id, int offset, long val);
+
+    /**
      * getInt64
      *
      * Return a signed 64-bit value from the given offset in the tag buffer.
@@ -491,7 +519,7 @@ public class Tag {
         long tmp_res = Tag.plc_tag_get_uint32(this.tag_id, offset);
 
         if(tmp_res < 0) {
-            tmp_res += 0x100000000L;
+            tmp_res = tmp_res & 0xFFFFFFFFL;
         }
 
         return tmp_res;
@@ -501,10 +529,10 @@ public class Tag {
 
 
     public int setUInt32(int offset, long val) {
-        return Tag.plc_tag_set_uint32(this.tag_id, offset, (int)val);
+        return Tag.plc_tag_set_uint32(this.tag_id, offset, val);
     }
 
-    private static native int plc_tag_set_uint32(int tag_id, int offset, int val);
+    private static native int plc_tag_set_uint32(int tag_id, int offset, long val);
 
 
 
@@ -524,16 +552,22 @@ public class Tag {
 
 
     public int getUInt16(int offset) {
-        return Tag.plc_tag_get_uint16(this.tag_id, offset);
+        int tmp_res = Tag.plc_tag_get_uint16(this.tag_id, offset);
+
+        if(tmp_res < 0) {
+            tmp_res = tmp_res & 0xFFFF;
+        }
+
+        return tmp_res;
     }
 
     private static native short plc_tag_get_uint16(int tag_id, int offset);
 
     public int setUInt16(int offset, int val) {
-        return Tag.plc_tag_set_uint16(this.tag_id, offset, (short)val);
+        return Tag.plc_tag_set_uint16(this.tag_id, offset, val);
     }
 
-    private static native int plc_tag_set_uint16(int tag_id, int offset, short val);
+    private static native int plc_tag_set_uint16(int tag_id, int offset, int val);
 
 
 
@@ -551,17 +585,21 @@ public class Tag {
 
 
 
-    public int getUInt8(int offset) {
-        return Tag.plc_tag_get_uint8(this.tag_id, offset);
+    public short getUInt8(int offset) {
+        short tmp_res = Tag.plc_tag_get_uint8(this.tag_id, offset);
+
+        if(tmp_res < 0) {
+            tmp_res = (short) (tmp_res & 0xFF);
+        }
+
+        return tmp_res;
     }
 
     private static native byte plc_tag_get_uint8(int tag_id, int offset);
 
-    public int setUInt8(int offset, int val) {
-        return Tag.plc_tag_set_uint8(this.tag_id, offset, (byte)val);
-    }
+    public int setUInt8(int offset, short val) { return Tag.plc_tag_set_uint8(this.tag_id, offset, val); }
 
-    private static native int plc_tag_set_uint8(int tag_id, int offset, byte val);
+    private static native int plc_tag_set_uint8(int tag_id, int offset, short val);
 
 
 
