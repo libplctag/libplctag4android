@@ -37,9 +37,9 @@ public class AsyncTaskAB  extends AsyncTask<Void, Void, String> {
             if (ABMaster.getStatus() == Tag.PLCTAG_STATUS_OK) {
                 ABMaster.read(timeout);
 
-                tempVal1 = String.valueOf(ABMaster.getInt32(0));
-                tempVal2 = String.valueOf(ABMaster.getInt32(4));
-                tempVal3 = String.valueOf(ABMaster.getInt32(8));
+                tempVal1 = String.valueOf(ABMaster.getInt16(0));
+                tempVal2 = String.valueOf(ABMaster.getInt16(2));
+                tempVal3 = String.valueOf(ABMaster.getInt16(4));
             } else {
                 tempVal1 = "err " + ABMaster.getStatus();
                 tempVal2 = "err " + ABMaster.getStatus();

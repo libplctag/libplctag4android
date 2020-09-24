@@ -2,6 +2,9 @@ package com.abmodbusmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
     AsyncTaskModbus myTaskMB = null;
 
     TextView tv1, tv2, tv3, tv4, tv5, tv6;
+    ColorStateList textColor;
     Button btnStartAB, btnStopAB, btnStartMB, btnStopMB;
 
     @Override
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
         tv4 = findViewById(R.id.textView4);
         tv5 = findViewById(R.id.textView5);
         tv6 = findViewById(R.id.textView6);
+
+        textColor = tv1.getTextColors();
 
         btnStartAB = findViewById(R.id.btnStartAB);
         btnStopAB = findViewById(R.id.btnStopAB);
@@ -93,8 +99,11 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
             myTaskAB = null;
         }
 
+        tv1.setTextColor(textColor);
         tv1.setText("0");
+        tv2.setTextColor(textColor);
         tv2.setText("0");
+        tv3.setTextColor(textColor);
         tv3.setText("0");
 
         btnStartAB.setEnabled(true);
@@ -128,8 +137,11 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
             myTaskMB = null;
         }
 
+        tv4.setTextColor(textColor);
         tv4.setText("0");
+        tv5.setTextColor(textColor);
         tv5.setText("0");
+        tv6.setTextColor(textColor);
         tv6.setText("0");
 
         btnStartMB.setEnabled(true);
@@ -146,15 +158,49 @@ public class MainActivity extends AppCompatActivity implements ABTaskCallbackInt
 
     @Override
     public void UpdateABUI(String val1, String val2, String val3) {
+        if (val1.startsWith("err")){
+            tv1.setTextColor(Color.RED);
+        } else {
+            tv1.setTextColor(textColor);
+        }
         tv1.setText(val1);
+
+        if (val2.startsWith("err")){
+            tv2.setTextColor(Color.RED);
+        } else {
+            tv2.setTextColor(textColor);
+        }
         tv2.setText(val2);
+
+        if (val3.startsWith("err")){
+            tv3.setTextColor(Color.RED);
+        } else {
+            tv3.setTextColor(textColor);
+        }
         tv3.setText(val3);
     }
 
     @Override
     public void UpdateMBUI(String val1, String val2, String val3) {
+        if (val1.startsWith("err")){
+            tv4.setTextColor(Color.RED);
+        } else {
+            tv4.setTextColor(textColor);
+        }
         tv4.setText(val1);
+
+        if (val2.startsWith("err")){
+            tv5.setTextColor(Color.RED);
+        } else {
+            tv5.setTextColor(textColor);
+        }
         tv5.setText(val2);
+
+        if (val3.startsWith("err")){
+            tv6.setTextColor(Color.RED);
+        } else {
+            tv6.setTextColor(textColor);
+        }
         tv6.setText(val3);
     }
 }
