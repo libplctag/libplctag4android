@@ -44,7 +44,7 @@ android {
         def libplctagFolderPath = "$rootDir/external_src/c/libplctag"
         def libplctagFolder = new File(libplctagFolderPath)
 
-        Process process = Runtime.getRuntime().exec("ping 8.8.8.8"); // Google DNS server
+        Process process = Runtime.getRuntime().exec("ping libplctag.github.io");
         int isReachable = process.waitFor();
 
         // if it does not exist, then clone the repo.
