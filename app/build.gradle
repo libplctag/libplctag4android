@@ -51,11 +51,11 @@ android {
 
         // if it does not exist, then clone the repo.
         if (!libplctagFolder.exists()) {
-            // need to make the directory in which we will check out the C library.
-            libplctagFolder.mkdirs()
-
-            // get the C library.
             if (isReachable == 0){
+                // need to make the directory in which we will check out the C library.
+                libplctagFolder.mkdirs()
+
+                // get the C library.
                 Grgit.clone(dir: libplctagFolderPath, uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
             }
         } else {
