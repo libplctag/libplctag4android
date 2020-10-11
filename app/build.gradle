@@ -1,3 +1,5 @@
+import org.ajoberstar.grgit.Grgit
+
 apply plugin: 'com.android.application'
 
 android {
@@ -49,17 +51,17 @@ android {
 
         // if it does not exist, then clone the repo.
         if (!libplctagFolder.exists()) {
-            // need to make the directory in which we will check out the C library.
-            libplctagFolder.mkdirs()
-
-            // get the C library.
             if (isReachable == 0){
-                grgit.clone(dir: libplctagFolderPath, uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
+                // need to make the directory in which we will check out the C library.
+                libplctagFolder.mkdirs()
+
+                // get the C library.
+                Grgit.clone(dir: libplctagFolderPath, uri: "https://github.com/libplctag/libplctag", refToCheckout: "prerelease")
             }
         } else {
             // if it does exist, do a pull.
             if (isReachable == 0){
-                def grgitInstance = grgit.open(dir: libplctagFolderPath)
+                def grgitInstance = Grgit.open(dir: libplctagFolderPath)
                 grgitInstance.pull()
             }
         }
